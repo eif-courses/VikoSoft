@@ -1,7 +1,70 @@
 ﻿@page "/"
+@using Microsoft.EntityFrameworkCore
+@using VikoSoft.Data
+@using VikoSoft.Data.Entities
+@implements IDisposable
 
+
+@inject IDbContextFactory<AppDbContext> DbFactory
 <PageTitle>Home</PageTitle>
+
+
+@if (Reports != null)
+{
+    @foreach (var item in Reports)
+    {
+        <p>@item.Title</p>
+    }
+}
+
 
 <h1>Hello, world!</h1>
 
 Welcome to your new Fluent Blazor app.
+
+
+
+@code {
+
+
+    private bool Busy = false;
+    private AppDbContext? Context { get; set; }
+
+    private ICollection<Report>? Reports { get; set; }
+
+    
+    //private Report? TempReport { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Busy = true;
+
+        try
+        {
+            Context = await DbFactory.CreateDbContextAsync();
+
+            //TempReport = new Report{Title = "Dėstytojo ataskaita"};
+            //
+            // Context.Reports.Add(TempReport);
+            //
+            // await Context.SaveChangesAsync();
+            
+            
+            if (Context?.Reports != null)
+            {
+                Reports = await Context.Reports.ToListAsync();
+            }
+        }
+        finally
+        {
+            Busy = false;
+        }
+
+        await base.OnInitializedAsync();
+    }
+    
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+}

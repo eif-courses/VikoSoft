@@ -1,11 +1,23 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.FluentUI.AspNetCore.Components;
 using VikoSoft.Components;
+using VikoSoft.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// EnableSensitiveDataLogging includes application data in exception messages and framework logging.
+#if DEBUG
+builder.Services.AddDbContextFactory<AppDbContext>(opt =>
+    opt.UseSqlite($"Data Source={nameof(AppDbContext.ApplicationDb)}.db")
+        .EnableSensitiveDataLogging());
+#else
+    services.AddDbContextFactory<AppDbContext>(opt =>
+        opt.UseSqlite($"Data Source={nameof(AppDbContext.ApplicationDb)}.db"));
+#endif
 
 builder.Services.AddFluentUIComponents();
 builder.Services.AddLocalization();
