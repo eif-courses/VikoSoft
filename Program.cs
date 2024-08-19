@@ -3,10 +3,14 @@ using VikoSoft.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
 builder.Services.AddFluentUIComponents();
+builder.Services.AddLocalization();
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -20,8 +24,19 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapControllers();
+
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+var supportedCultures = new[] { "en-US", "lt-LT" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
+
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

@@ -7,7 +7,41 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.*-* "/>
-        <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.*-* "/>
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.8" />
+        <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.*-* " />
+        <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.*-* " />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Locales\TranslatedStrings.en-US.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Locales\TranslatedStrings.lt-LT.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.lt-LT.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Locales\TranslatedStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>TranslatedStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Locales\TranslatedStrings.en-US.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>TranslatedStrings.en-US.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Locales\TranslatedStrings.lt-LT.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>TranslatedStrings.lt-LT.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Locales\TranslatedStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>TranslatedStrings.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>
