@@ -1,49 +1,40 @@
 ﻿@using System.Globalization
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
+@rendermode InteractiveServer
 
-<p>
-    <label>
-        Select your locale:
-        <select @bind="_selectedCulture" @bind:after="ApplySelectedCultureAsync">
-            @foreach (var culture in _supportedCultures)
-            {
-                <option value="@culture">@culture.DisplayName</option>
-            }
-        </select>
-    </label>
-</p>
+<FluentSelect Items="@_supportedCultures"
+              OptionText="@(i => i.DisplayName)"
+              OptionValue="@(i => i.Name)"
+              @bind-Value="_selectedString"
+              @onchange="OnCultureChanged"/>
 
-@code
-{
+@code {
+
     private readonly CultureInfo[] _supportedCultures =
-    [
+    {
         new CultureInfo("en-US"),
         new CultureInfo("lt-LT")
-    ];
+    };
 
-    private CultureInfo? _selectedCulture;
+    private string? _selectedString;
 
     protected override void OnInitialized()
     {
-        _selectedCulture = CultureInfo.CurrentCulture;
+        _selectedString = CultureInfo.CurrentCulture.Name;
     }
 
-    private async Task ApplySelectedCultureAsync()
+    private async Task OnCultureChanged(ChangeEventArgs e)
     {
-        if (!Equals(CultureInfo.CurrentCulture, _selectedCulture))
+        _selectedString = e.Value?.ToString();
+        if (_selectedString != null && !Equals(CultureInfo.CurrentCulture.Name, _selectedString))
         {
-            var uri = new Uri(Navigation.Uri)
-                .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
-            if (_selectedCulture != null)
-            {
-                var cultureEscaped = Uri.EscapeDataString(_selectedCulture.Name);
-                var uriEscaped = Uri.EscapeDataString(uri);
+            var uri = new Uri(Navigation.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+            var cultureEscaped = Uri.EscapeDataString(_selectedString);
+            var uriEscaped = Uri.EscapeDataString(uri);
 
-                Navigation.NavigateTo(
-                    $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}",
-                    forceLoad: true);
-            }
+            Navigation.NavigateTo($"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}", forceLoad: true);
         }
     }
+
 }
