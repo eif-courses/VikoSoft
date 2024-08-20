@@ -1,24 +1,37 @@
 ﻿@page "/"
+
 @using Microsoft.EntityFrameworkCore
 @using VikoSoft.Data
 @using VikoSoft.Data.Entities
 @implements IDisposable
 
+@using VikoSoft.Components.Account.Shared
+
+
 
 @inject IDbContextFactory<AppDbContext> DbFactory
 <PageTitle>Home</PageTitle>
 
-
-@if (Reports != null)
-{
-    @foreach (var item in Reports)
-    {
-        <p>@item.Title</p>
-    }
-}
+<ExternalLoginPicker></ExternalLoginPicker>
 
 
-<h1>Hello, world!</h1>
+
+<AuthorizeView>
+    <Authorized>
+        @if (Reports != null)
+        {
+            @foreach (var item in Reports)
+            {
+                <p>@item.Title</p>
+            }
+        }
+        <h1>Hello, world!</h1>
+    </Authorized>
+    <NotAuthorized>
+        <p>Please log in to view reports.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
 
 Welcome to your new Fluent Blazor app.
 
