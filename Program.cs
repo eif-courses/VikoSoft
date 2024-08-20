@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,12 +24,21 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = IdentityConstants.ApplicationScheme;
     options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 }).AddGoogle(googleOptions =>
 {
     googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
     googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
     googleOptions.CallbackPath = "/sign-oidc";
 
+})
+.AddMicrosoftAccount(microsoftOptions =>
+{
+    microsoftOptions.ClientId = "6fa1f6e3-8571-45aa-bd39-771cc546800e"; // Application (client) ID
+    microsoftOptions.ClientSecret = builder.Configuration["Microsoft:Secret"];
+    microsoftOptions.CallbackPath = "/signin-oidc";
+    microsoftOptions.Scope.Add("openid offline_access");
+    
 }).AddIdentityCookies();
 
 

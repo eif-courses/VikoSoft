@@ -29,6 +29,15 @@
     logging in.
 </div>
 
+<h3>Claims provided by @ProviderDisplayName:</h3>
+<ul>
+    @foreach (var claim in claims)
+    {
+    <li><strong>@claim.Key</strong>: @claim.Value</li>
+    }
+</ul>
+
+
 <div class="row">
     <div class="col-md-4">
         <EditForm Model="Input" OnValidSubmit="OnValidSubmitAsync" FormName="confirmation" method="post">
@@ -50,6 +59,9 @@
     private string? message;
     private ExternalLoginInfo externalLoginInfo = default!;
 
+    
+    private List<KeyValuePair<string, string>> claims = new();
+    
     [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
 
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
@@ -100,6 +112,10 @@
             isPersistent: false,
             bypassTwoFactor: true);
 
+        claims = externalLoginInfo.Principal.Claims
+            .Select(c => new KeyValuePair<string, string>(c.Type, c.Value))
+            .ToList();
+        
         if (result.Succeeded)
         {
             Logger.LogInformation(
