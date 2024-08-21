@@ -26,8 +26,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 
     
     public DbSet<Report> Reports { get; init; }
-
-    
+    public DbSet<Subject> Subjects { get; set; }
+    public DbSet<ContactHours> ContactHours { get; set; }
+    public DbSet<NonContactHours> NonContactHours { get; set; }
+    public DbSet<SubjectType> SubjectTypes { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -42,6 +44,20 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .HasConversion(
                 v => v.ToString(),
                 v => Ulid.Parse(v.ToString()));
+        
+        modelBuilder.Entity<Category>()
+            .HasMany(c => c.SubjectTypes)
+            .WithOne(st => st.Category)
+            .HasForeignKey(st => st.CategoryId)
+            .IsRequired();
+
+        // Configure SubjectType -> Subject relationship
+        modelBuilder.Entity<SubjectType>()
+            .HasMany(st => st.Subjects)
+            .WithOne(s => s.Type)
+            .HasForeignKey(s => s.TypeId)
+            .IsRequired();
+        
         
         
         base.OnModelCreating(modelBuilder);
