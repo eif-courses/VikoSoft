@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
+using Tarifikacija.Entities;
 using VikoSoft.Data.Entities;
 
 namespace VikoSoft.Data;
@@ -33,14 +33,22 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<NonContactHours> NonContactHours { get; set; }
     public DbSet<ContactHoursDetails> ContactHoursDetails { get; set; }
     public DbSet<NonContactHoursDetails> NonContactHoursDetails { get; set; }
+    
+    
+    
+    public DbSet<TeacherCard> TeacherCards { get; set; }
+    public DbSet<TeacherCardSheet> TeacherCardSheets { get; set; }
+    public DbSet<TeacherCardSheetActivity> TeacherCardSheetActivities { get; set; }
+    public DbSet<Activity> Activities { get; set; }
+    public DbSet<ActivityCategory> ActivityCategories { get; set; }
+    
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // This property isn't on the C# class,
         // so we set it up as a "shadow" property and use it for concurrency.
-        modelBuilder.Entity<Report>()
-            .Property<byte[]>(RowVersion)
-            .IsRowVersion();
+      
 
         modelBuilder.Entity<BaseEntity>().HasKey(be => be.Id);
         modelBuilder.Entity<BaseEntity>().Property(be => be.Id).HasConversion(
@@ -112,5 +120,66 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .HasForeignKey<NonContactHoursDetails>(nchd => nchd.Id);
 
         base.OnModelCreating(modelBuilder);
+        
+        ConfigureTeacherCard(modelBuilder);
+        ConfigureTeacherCardSheet(modelBuilder);
+        ConfigureTeacherCardSheetActivity(modelBuilder);
+        ConfigureActivity(modelBuilder);
+        ConfigureActivityCategory(modelBuilder);
+        
+        
     }
+    private void ConfigureTeacherCard(ModelBuilder modelBuilder)
+    {
+        // TeacherCard has many TeacherCardSheets
+        modelBuilder.Entity<TeacherCard>()
+            .HasMany(tc => tc.Sheets)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+
+    private void ConfigureTeacherCardSheet(ModelBuilder modelBuilder)
+    {
+        // TeacherCardSheet has many TeacherCardSheetActivities
+        modelBuilder.Entity<TeacherCardSheet>()
+            .HasMany(tcs => tcs.Activities)
+            .WithOne(tca => tca.Sheet)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Enum conversion
+        modelBuilder.Entity<TeacherCardSheet>()
+            .Property(tcs => tcs.SheetType)
+            .HasConversion<int>(); // Store enum as int
+    }
+
+    private void ConfigureTeacherCardSheetActivity(ModelBuilder modelBuilder)
+    {
+        // Each TeacherCardSheetActivity is associated with one Activity
+        modelBuilder.Entity<TeacherCardSheetActivity>()
+            .HasOne(tca => tca.Activity)
+            .WithMany()
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Validate HoursSpent <= MaxHours in database using a custom constraint or trigger if needed
+        // OR consider using FluentValidation/validation logic in business layer instead
+    }
+
+    private void ConfigureActivity(ModelBuilder modelBuilder)
+    {
+        // Each Activity has one ActivityCategory
+        modelBuilder.Entity<Activity>()
+            .HasOne(a => a.Category)
+            .WithMany()
+            .OnDelete(DeleteBehavior.SetNull);
+    }
+
+    private void ConfigureActivityCategory(ModelBuilder modelBuilder)
+    {
+        // Basic configuration for ActivityCategory
+        modelBuilder.Entity<ActivityCategory>()
+            .Property(ac => ac.Title)
+            .HasMaxLength(100)
+            .IsRequired();
+    }
+    
 }

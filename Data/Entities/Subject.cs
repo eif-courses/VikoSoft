@@ -1,11 +1,9 @@
 ﻿
+using Tarifikacija.Entities;
+
 namespace VikoSoft.Data.Entities;
 
 
-public abstract class BaseEntity
-{
-    public Ulid Id { get; set; } = Ulid.NewUlid();
-}
 
 public class Category : BaseEntity
 {
@@ -110,3 +108,7 @@ public class NonContactHoursDetails : BaseEntity
     public int OtherCount { get; set; }
     public NonContactHours NonContactHours { get; set; }
 }
+
+
+
+
