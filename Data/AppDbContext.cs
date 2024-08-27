@@ -34,8 +34,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<ContactHoursDetails> ContactHoursDetails { get; set; }
     public DbSet<NonContactHoursDetails> NonContactHoursDetails { get; set; }
     
-    
-    
     public DbSet<TeacherCard> TeacherCards { get; set; }
     public DbSet<TeacherCardSheet> TeacherCardSheets { get; set; }
     public DbSet<TeacherCardSheetActivity> TeacherCardSheetActivities { get; set; }
