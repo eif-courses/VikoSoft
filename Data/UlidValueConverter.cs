@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace StudyPlannerSoft.Data;
+namespace VikoSoft.Data;
 
 public class UlidValueConverter : ValueConverter<Ulid, string>
 {

@@ -1,6 +1,6 @@
-﻿using StudyPlannerSoft.Entities;
+﻿using VikoSoft.Entities;
 
-namespace StudyPlannerSoft.Dto;
+namespace VikoSoft.Dto;
 
 public class PlannedGroupDto
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using StudyPlannerSoft.Entities;
+using VikoSoft.Entities;
 
 namespace VikoSoft.Data;
 

@@ -1,15 +1,15 @@
 ﻿using System.Text;
 using ExcelDataReader;
-using StudyPlannerSoft.Data;
-using StudyPlannerSoft.Entities;
+using VikoSoft.Data;
+using VikoSoft.Entities;
 
-namespace StudyPlannerSoft.Features.Lecturers;
+namespace VikoSoft.Services;
 
 public class ImportLecturersService
 {
-    private readonly MyDatabaseContext _dbContext;
+    private readonly VikoDbContext _dbContext;
 
-    public ImportLecturersService(MyDatabaseContext dbContext)
+    public ImportLecturersService(VikoDbContext dbContext)
     {
         _dbContext = dbContext;
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);

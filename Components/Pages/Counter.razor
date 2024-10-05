@@ -1,22 +1,62 @@
 ﻿@page "/counter"
+@using Microsoft.EntityFrameworkCore
+@using VikoSoft.Data
+@using VikoSoft.Entities
 @rendermode InteractiveServer
+@inject IDbContextFactory<VikoDbContext> DbFactory
 
 <PageTitle>Counter</PageTitle>
 
-<h1>Counter</h1>
-
-<div role="status" style="padding-bottom: 1em;">
-    Current count: <FluentBadge Appearance="Appearance.Neutral">@currentCount</FluentBadge>
-</div>
-
-<FluentButton Appearance="Appearance.Accent" @onclick="IncrementCount">Click me</FluentButton>
-
+<FluentGrid Spacing="4">
+    <FluentGridItem xs="12">
+        <h4>With auto-fit</h4>
+        <FluentDataGrid Items="@subjects" AutoFit="true">
+            <PropertyColumn Property="@(p => p.Id)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
+        </FluentDataGrid>
+    </FluentGridItem>
+</FluentGrid>
 @code {
-    private int currentCount = 0;
+    private IQueryable<Subject> subjects; 
+    private VikoDbContext? DbContext { get; set; }
 
-    private void IncrementCount()
+    // private ICollection<Report>? Reports { get; set; }
+
+    
+    //private Report? TempReport { get; set; }
+    
+    protected override async Task OnInitializedAsync()
     {
-        currentCount++;
-    }
+        //Busy = true;
 
+        try
+        {
+            DbContext = await DbFactory.CreateDbContextAsync();
+            subjects = DbContext.Subjects; // Fetching data asynchronously
+            
+            //TempReport = new Report{Title = "Dėstytojo ataskaita"};
+            //
+            // Context.Reports.Add(TempReport);
+            //
+            // await Context.SaveChangesAsync();
+
+
+            // if (Context?.Reports != null)
+            // {
+            //     Reports = await Context.Reports.ToListAsync();
+            // }
+        }
+        catch(Exception ex) 
+        {
+            Console.WriteLine("EXCEPTION"+ ex.Message);
+        }
+     
+
+        await base.OnInitializedAsync();
+    }
+    
+    public void Dispose()
+    {
+        DbContext?.Dispose();
+    }
 }

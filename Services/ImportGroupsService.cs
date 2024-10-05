@@ -1,15 +1,15 @@
 ﻿using System.Text;
 using ExcelDataReader;
-using StudyPlannerSoft.Data;
-using StudyPlannerSoft.Entities;
+using VikoSoft.Data;
+using VikoSoft.Entities;
 
-namespace StudyPlannerSoft.Features.Groups;
+namespace VikoSoft.Services;
 
 public class ImportGroupsService
 {
-    private readonly MyDatabaseContext _dbContext;
+    private readonly VikoDbContext _dbContext;
 
-    public ImportGroupsService(MyDatabaseContext dbContext)
+    public ImportGroupsService(VikoDbContext dbContext)
     {
         _dbContext = dbContext;
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance); 

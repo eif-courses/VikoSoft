@@ -1,4 +1,4 @@
-﻿namespace StudyPlannerSoft.Entities;
+﻿namespace VikoSoft.Entities;
 
 public enum Semester
 {

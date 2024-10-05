@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using StudyPlannerSoft.Data;
-using StudyPlannerSoft.Entities;
+using VikoSoft.Entities;
 
 namespace VikoSoft.Data;
 
-public class VikoDbContext(DbContextOptions<VikoDbContext> options) : IdentityDbContext(options)
+public class VikoDbContext : IdentityDbContext
 {
+    public VikoDbContext(DbContextOptions<VikoDbContext> options) : base(options)
+    {
+    }
+
     public DbSet<Lecturer> Lecturers { get; set; }
     public DbSet<Faculty> Faculties { get; set; }
     public DbSet<Department> Departments { get; set; }
@@ -41,7 +44,7 @@ public class VikoDbContext(DbContextOptions<VikoDbContext> options) : IdentityDb
         if (!optionsBuilder.IsConfigured)
         {
             
-            optionsBuilder.UseSqlite("Data Source=VikoSoftware.db");
+            optionsBuilder.UseSqlite($"Data Source=VikoSoftware.db");
             // var npgsqlConnectionString = new NpgsqlConnectionStringBuilder
             // {
             //     Host = Environment.GetEnvironmentVariable("POSTGRES_HOST"),

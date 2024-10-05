@@ -1,32 +1,27 @@
-﻿using FastEndpoints;
-using Microsoft.EntityFrameworkCore;
-using StudyPlannerSoft.Data;
-using StudyPlannerSoft.Dto;
-using StudyPlannerSoft.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using VikoSoft.Data;
+using VikoSoft.Dto;
+using VikoSoft.Entities;
 
-namespace StudyPlannerSoft.Features.Plans;
+namespace VikoSoft.TestFIles;
 
 public class CreatePlanRequest
 {
     public string? Label { get; set; } = string.Empty;
 }
 
-public class CreatePlan : Endpoint<CreatePlanRequest>
+public class CreatePlan 
 {
-    private readonly MyDatabaseContext _context;
+    private readonly VikoDbContext _context;
 
-    public CreatePlan(MyDatabaseContext context)
+    public CreatePlan(VikoDbContext context)
     {
         _context = context;
     }
 
-    public override void Configure()
-    {
-        Post("/plans/create");
-        AllowAnonymous();
-    }
+  
 
-    public override async Task HandleAsync(CreatePlanRequest req, CancellationToken ct)
+    public async Task HandleAsync(CreatePlanRequest req, CancellationToken ct)
     {
 
 
@@ -135,7 +130,7 @@ public class CreatePlan : Endpoint<CreatePlanRequest>
         })).ToList();
         
         await SavePlannedSubjects(planSubjects, ct);
-        await SendAsync("Planas sėkmingai išsaugotas", 200, ct);
+        //await SendAsync("Planas sėkmingai išsaugotas", 200, ct);
     }
 
     private async Task SavePlannedSubjects(List<PlannedSubjectDto> planSubjects, CancellationToken ct)

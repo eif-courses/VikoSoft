@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddDataGridEntityFrameworkAdapter();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -48,8 +49,8 @@ builder.Services.AddDbContextFactory<VikoDbContext>(opt =>
     opt.UseSqlite($"Data Source=VikoSoftware.db")
         .EnableSensitiveDataLogging());
 #else
-    services.AddDbContextFactory<AppDbContext>(opt =>
-        opt.UseSqlite($"Data Source={nameof(AppDbContext.ApplicationDb)}.db"));
+    services.AddDbContextFactory<VikoDbContext>(opt =>
+        opt.UseSqlite($"Data Source=VikoSoftware.db"));
 #endif
 
 
@@ -90,14 +91,6 @@ app.MapControllers();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-
-var supportedCultures = new[] { "en-US", "lt-LT" };
-var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture(supportedCultures[0])
-    .AddSupportedCultures(supportedCultures)
-    .AddSupportedUICultures(supportedCultures);
-
-app.UseRequestLocalization(localizationOptions);
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

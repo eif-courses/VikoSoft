@@ -1,29 +1,22 @@
-﻿using FastEndpoints;
-using StudyPlannerSoft.Data;
+﻿using VikoSoft.Data;
+using VikoSoft.Services;
 
-namespace StudyPlannerSoft.Features.Subjects;
+namespace VikoSoft.TestFIles;
 
 internal sealed class ImportSubjectsRequest
 {
     public IFormFile File { get; set; }
 }
-internal sealed class ImportSubjects(ImportSubjectsService importSubjectsService, MyDatabaseContext dbContext)
-    : Endpoint<ImportSubjectsRequest>
+internal sealed class ImportSubjects(ImportSubjectsService importSubjectsService, VikoDbContext dbContext)
 {
-    public override void Configure()
-    {
-        Post("/subjects/import");
-        AllowFileUploads();
-        AllowAnonymous();
-    }
+  
 
-    public override async Task HandleAsync(ImportSubjectsRequest req, CancellationToken ct)
+    public async Task HandleAsync(ImportSubjectsRequest req, CancellationToken ct)
     {
         var subjects = importSubjectsService.ImportFromExcel(req.File.OpenReadStream());
-        
         dbContext.Subjects.AddRange(subjects);
         await dbContext.SaveChangesAsync(ct);
 
-        await SendOkAsync(ct);
+        //await SendOkAsync(ct);
     }
 }

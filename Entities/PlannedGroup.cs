@@ -1,7 +1,6 @@
-﻿using System.Diagnostics.SymbolStore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace StudyPlannerSoft.Entities;
+namespace VikoSoft.Entities;
 
 public class PlannedGroup
 {

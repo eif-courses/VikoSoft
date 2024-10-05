@@ -1,15 +1,15 @@
 ﻿using System.Text;
 using ExcelDataReader;
-using StudyPlannerSoft.Data;
-using StudyPlannerSoft.Entities;
+using VikoSoft.Data;
+using VikoSoft.Entities;
 
-namespace StudyPlannerSoft.Features.Subjects;
+namespace VikoSoft.Services;
 
 public class ImportSubjectsService
 {
-    private readonly MyDatabaseContext _dbContext;
+    private readonly VikoDbContext _dbContext;
 
-    public ImportSubjectsService(MyDatabaseContext dbContext)
+    public ImportSubjectsService(VikoDbContext dbContext)
     {
         _dbContext = dbContext;
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance); // Required to support older Excel formats
