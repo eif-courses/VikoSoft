@@ -44,8 +44,8 @@ builder.Services.AddAuthentication(options =>
 
 // EnableSensitiveDataLogging includes application data in exception messages and framework logging.
 #if DEBUG
-builder.Services.AddDbContextFactory<AppDbContext>(opt =>
-    opt.UseSqlite($"Data Source={nameof(AppDbContext.ApplicationDb)}.db")
+builder.Services.AddDbContextFactory<VikoDbContext>(opt =>
+    opt.UseSqlite($"Data Source=VikoSoftware.db")
         .EnableSensitiveDataLogging());
 #else
     services.AddDbContextFactory<AppDbContext>(opt =>
@@ -55,12 +55,12 @@ builder.Services.AddDbContextFactory<AppDbContext>(opt =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<AppDbContext>()
+builder.Services.AddIdentityCore<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<VikoDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IEmailSender<IdentityUser>, IdentityNoOpEmailSender>();
 
 
 

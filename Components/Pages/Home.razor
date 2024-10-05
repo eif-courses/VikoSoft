@@ -2,14 +2,13 @@
 
 @using Microsoft.EntityFrameworkCore
 @using VikoSoft.Data
-@using VikoSoft.Data.Entities
 @implements IDisposable
 
 @using VikoSoft.Components.Account.Shared
 
 
 
-@inject IDbContextFactory<AppDbContext> DbFactory
+@inject IDbContextFactory<VikoDbContext> DbFactory
 <PageTitle>Home</PageTitle>
 
 <ExternalLoginPicker></ExternalLoginPicker>
@@ -41,7 +40,7 @@ Welcome to your new Fluent Blazor app.
 
 
     private bool Busy = false;
-    private AppDbContext? Context { get; set; }
+    private VikoDbContext? Context { get; set; }
 
     // private ICollection<Report>? Reports { get; set; }
 
