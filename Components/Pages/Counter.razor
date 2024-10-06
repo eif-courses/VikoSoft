@@ -7,15 +7,38 @@
 
 <PageTitle>Counter</PageTitle>
 
+<DataImporter/>
+
 <FluentGrid Spacing="4">
     <FluentGridItem xs="12">
         <h4>With auto-fit</h4>
         <FluentDataGrid Items="@subjects" AutoFit="true">
-            <PropertyColumn Property="@(p => p.Id)" Sortable="true" />
             <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.SubjectType)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.LectureHours)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.PracticeHours)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.SelfStudyHours)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.RemoteLectureHours)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.RemotePracticeHours)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Credits)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.EvaluationForm)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.FinalProjectExamCount)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.OtherContactHoursCount)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.ConsultationCount)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.GradingNumberCount)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.HomeworkHoursCount)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.PracticeReportHoursCount)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.RemoteTeachingHoursCount)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.CourseWorkHoursCount)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.ExamHours)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.OtherNonContactCount)" Sortable="true" />
         </FluentDataGrid>
     </FluentGridItem>
 </FluentGrid>
+
+
+
+
 @code {
     private IQueryable<Subject> subjects; 
     private VikoDbContext? DbContext { get; set; }

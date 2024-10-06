@@ -1,0 +1,83 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using VikoSoft.Data
+@using VikoSoft.Services
+@inject ImportSubjectsService SubjectImporter
+@inject IDbContextFactory<VikoDbContext> DbFactory
+<FluentInputFile @ref="@myFileUploader"
+                 DragDropZoneVisible="false"
+                 Mode="InputFileMode.SaveToTemporaryFolder"
+                 Multiple="false"
+                 AnchorId="MyUploadButton"
+                 MaximumFileSize="@(100 * 1024 * 1024)"
+                 Accept=".xlsx, .xls"
+                 OnProgressChange="@(e => { progressPercent = e.ProgressPercent; progressTitle = e.ProgressTitle; })"
+                 OnCompleted="@OnCompleted"/>
+
+<FluentProgress Min="0" Max="100" Visible="@(progressPercent > 0)" Value="@progressPercent"/>
+<FluentLabel Alignment="HorizontalAlignment.Center">
+    @progressTitle
+</FluentLabel>
+
+<FluentButton Id="MyUploadButton" Appearance="Appearance.Accent">
+    Upload Excel File
+</FluentButton>
+
+@if (Files.Any())
+{
+    <h4>File(s) uploaded:</h4>
+    <ul>
+        @foreach (var file in Files)
+        {
+            <li>
+                <b>@file.Name</b> 🔹
+                @($"{Decimal.Divide(file.Size, 1024):N} KB") 🔹
+                @file.ContentType 🔹
+                @file.LocalFile?.FullName
+                @file.ErrorMessage
+            </li>
+        }
+    </ul>
+}
+
+@code
+{
+    FluentInputFile? myFileUploader = default!;
+    int? progressPercent;
+    string? progressTitle;
+    private VikoDbContext? DbContext { get; set; }
+
+    FluentInputFileEventArgs[] Files = Array.Empty<FluentInputFileEventArgs>();
+
+    async void OnCompleted(IEnumerable<FluentInputFileEventArgs> files)
+    {
+        Files = files.ToArray();
+        progressPercent = myFileUploader!.ProgressPercent;
+        progressTitle = myFileUploader!.ProgressTitle;
+
+        foreach (var file in Files)
+        {
+            if (file.LocalFile != null)
+            {
+                await using var stream = file.LocalFile.OpenRead();
+
+                try
+                {
+                    var importedSubjects = SubjectImporter.ImportFromExcel(stream);
+                    DbContext = await DbFactory.CreateDbContextAsync();
+                    
+                    foreach (var subject in importedSubjects)
+                    {
+                        DbContext.Subjects.Add(subject);
+                    }
+
+                    await DbContext.SaveChangesAsync();
+                    progressTitle = "Subjects imported successfully!";
+                }
+                catch (Exception ex)
+                {
+                    progressTitle = $"Error importing subjects: {ex.Message}";
+                }
+            }
+        }
+    }
+}

@@ -6,6 +6,7 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using VikoSoft.Components;
 using VikoSoft.Components.Account;
 using VikoSoft.Data;
+using VikoSoft.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,9 @@ builder.Services.AddDbContextFactory<VikoDbContext>(opt =>
         opt.UseSqlite($"Data Source=VikoSoftware.db"));
 #endif
 
+builder.Services.AddScoped<ImportSubjectsService>();
+builder.Services.AddScoped<ImportLecturersService>();
+builder.Services.AddScoped<ImportGroupsService>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
