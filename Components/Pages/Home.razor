@@ -4,16 +4,13 @@
 @using VikoSoft.Data
 @implements IDisposable
 
-@using VikoSoft.Components.Account.Shared
+@using VikoSoft.Components.Account.Pages
 
 
 
 @inject IDbContextFactory<VikoDbContext> DbFactory
 <PageTitle>Home</PageTitle>
-
-<ExternalLoginPicker></ExternalLoginPicker>
-
-
+<Login></Login>
 
 <AuthorizeView>
     <Authorized>
